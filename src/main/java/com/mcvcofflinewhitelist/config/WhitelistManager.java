@@ -1,10 +1,13 @@
 package com.mcvcofflinewhitelist.config;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -81,5 +84,61 @@ public class WhitelistManager {
      */
     public Set<String> getWhitelistedNames() {
         return Collections.unmodifiableSet(whitelist);
+    }
+
+    /**
+     * Returns the number of whitelisted entries.
+     */
+    public int size() {
+        return whitelist.size();
+    }
+
+    /**
+     * Adds a player to the whitelist (case-insensitive).
+     * Updates both the in-memory set and the file on disk.
+     *
+     * @return {@code true} if the player was newly added
+     */
+    public boolean addPlayer(String username) {
+        String lower = username.toLowerCase();
+        boolean added = whitelist.add(lower);
+        if (added) {
+            try {
+                Files.writeString(whitelistFile, username + System.lineSeparator(),
+                        StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+                logger.info("Added '{}' to offline whitelist", username);
+            } catch (IOException e) {
+                logger.error("Failed to write to whitelist file: {}", whitelistFile, e);
+                whitelist.remove(lower); // rollback
+                return false;
+            }
+        }
+        return added;
+    }
+
+    /**
+     * Removes a player from the whitelist (case-insensitive).
+     * Updates both the in-memory set and the file on disk.
+     *
+     * @return {@code true} if the player was in the whitelist and removed
+     */
+    public boolean removePlayer(String username) {
+        String lower = username.toLowerCase();
+        boolean removed = whitelist.remove(lower);
+        if (removed) {
+            try {
+                List<String> lines = Files.readAllLines(whitelistFile, StandardCharsets.UTF_8);
+                List<String> filtered = lines.stream()
+                        .filter(line -> !line.trim().equalsIgnoreCase(username))
+                        .collect(Collectors.toList());
+                Files.write(whitelistFile, filtered, StandardCharsets.UTF_8);
+                logger.info("Removed '{}' from offline whitelist", username);
+            } catch (IOException e) {
+                logger.error("Failed to update whitelist file: {}", whitelistFile, e);
+                whitelist.add(lower); // rollback
+                return false;
+            }
+        }
+        return removed;
     }
 }

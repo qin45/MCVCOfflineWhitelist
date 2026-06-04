@@ -1,8 +1,10 @@
 package com.mcvcofflinewhitelist;
 
 import com.google.inject.Inject;
+import com.mcvcofflinewhitelist.command.WhitelistCommand;
 import com.mcvcofflinewhitelist.config.WhitelistManager;
 import com.mcvcofflinewhitelist.listener.PlayerListener;
+import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -61,6 +63,15 @@ public class MCVCOfflineWhitelist {
             }
             proxy.getEventManager().register(MCVCOfflineWhitelist.this,
                     new PlayerListener(MCVCOfflineWhitelist.this));
+
+            // Register /vow command
+            CommandMeta meta = proxy.getCommandManager()
+                    .metaBuilder("vow")
+                    .plugin(MCVCOfflineWhitelist.this)
+                    .build();
+            proxy.getCommandManager().register(meta,
+                    new WhitelistCommand(MCVCOfflineWhitelist.this));
+
             logger.info("MCVCOfflineWhitelist enabled. Whitelist: {}",
                     whitelistManager.getWhitelistFile().toAbsolutePath().normalize());
         });
