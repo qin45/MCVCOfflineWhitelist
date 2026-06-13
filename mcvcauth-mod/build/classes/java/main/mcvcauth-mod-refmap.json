@@ -15,6 +15,12 @@
     "com/mcvcofflinewhitelist/auth/mixin/PlayerMoveMixin": {
       "onPlayerMove": "Lnet/minecraft/class_3244;method_12063(Lnet/minecraft/class_2828;)V",
       "tick": "Lnet/minecraft/class_3244;method_18784()V"
+    },
+    "com/mcvcofflinewhitelist/auth/mixin/PlayerTickMixin": {
+      "playerTick": "Lnet/minecraft/class_3222;method_14226()V"
+    },
+    "com/mcvcofflinewhitelist/auth/mixin/SlotInteractionMixin": {
+      "canTakeItems": "Lnet/minecraft/class_1735;method_7674(Lnet/minecraft/class_1657;)Z"
     }
   },
   "data": {
@@ -34,6 +40,12 @@
       "com/mcvcofflinewhitelist/auth/mixin/PlayerMoveMixin": {
         "onPlayerMove": "Lnet/minecraft/class_3244;method_12063(Lnet/minecraft/class_2828;)V",
         "tick": "Lnet/minecraft/class_3244;method_18784()V"
+      },
+      "com/mcvcofflinewhitelist/auth/mixin/PlayerTickMixin": {
+        "playerTick": "Lnet/minecraft/class_3222;method_14226()V"
+      },
+      "com/mcvcofflinewhitelist/auth/mixin/SlotInteractionMixin": {
+        "canTakeItems": "Lnet/minecraft/class_1735;method_7674(Lnet/minecraft/class_1657;)Z"
       }
     }
   }

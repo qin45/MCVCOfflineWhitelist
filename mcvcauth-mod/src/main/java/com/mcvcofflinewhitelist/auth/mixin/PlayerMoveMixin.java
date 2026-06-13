@@ -14,15 +14,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Prevents unauthenticated players from moving or turning.
  *
- * <p><b>Why {@code tick()} instead of just {@code onPlayerMove}:</b><br>
- * In Minecraft 1.21 the movement-packet handling may dispatch through
- * multiple specific handler methods. Cancelling {@code onPlayerMove}
- * alone could miss some of them. By injecting at {@code TAIL} of
- * {@code tick()}, we reset the player's position and rotation after
- * EVERY tick — regardless of which packets were processed.</p>
- *
- * <p>Additional injections cancel the most common packet types early
- * so the server never processes invalid position data at all.</p>
+ * <p><b>Strategy (three layers):</b><br>
+ * <ol>
+ *   <li><b>Cancels {@code onPlayerMove}</b> — server never processes
+ *       incoming position/rotation changes.</li>
+ *   <li><b>Rate-limited {@code requestTeleport}</b> — periodically
+ *       rubber-bands the client back to the freeze point so the local
+ *       viewport snaps back. Throttled to avoid "moved too fast" kicks.</li>
+ *   <li><b>{@code playerTick()} cancellation</b> (separate mixin) —
+ *       prevents ALL tick processing on the player entity.</li>
+ * </ol>
+ * </p>
  */
 @Mixin(ServerPlayNetworkHandler.class)
 public class PlayerMoveMixin {
@@ -30,7 +32,7 @@ public class PlayerMoveMixin {
     @Shadow
     private ServerPlayerEntity player;
 
-    // ── Freeze position storage ───────────────────────────────────────
+    // ── Freeze position ───────────────────────────────────────────────
 
     @Unique
     private double mcvcauth_freezeX;
@@ -50,11 +52,18 @@ public class PlayerMoveMixin {
     @Unique
     private boolean mcvcauth_freezeInitialized = false;
 
-    // ── Cancel incoming movement packets (early rejection) ────────────
+    /** Nano time of the last teleport — rate-limit to avoid spam kicks. */
+    @Unique
+    private long mcvcauth_lastTeleport = 0L;
+
+    /** Minimum interval between teleport packets (nano = ms × 1_000_000). */
+    @Unique
+    private static final long TELEPORT_INTERVAL_NANO = 500_000_000L; // 500 ms
+
+    // ── Cancel movement packets ───────────────────────────────────────
 
     /**
-     * Catches all position/rotation change packets and discards them
-     * before the server processes them.
+     * Discards position/rotation packets before the server processes them.
      */
     @Inject(method = "onPlayerMove", at = @At("HEAD"), cancellable = true)
     public void onPlayerMove(PlayerMoveC2SPacket packet, CallbackInfo ci) {
@@ -63,12 +72,11 @@ public class PlayerMoveMixin {
         }
     }
 
-    // ── Periodic position & rotation reset (guaranteed freeze) ────────
+    // ── Periodic teleport (client rubber-band) ────────────────────────
 
     /**
-     * After every tick, restore the player to their freeze position.
-     * This catches any movement that slipped through packet handlers
-     * (vehicle movement, teleport confirms, future packet changes, etc.).
+     * After every tick, teleport the client back to the freeze position.
+     * Rate-limited so we don't trigger the anti-cheat "moved too fast" check.
      */
     @Inject(method = "tick", at = @At("TAIL"))
     public void onTickTail(CallbackInfo ci) {
@@ -88,13 +96,16 @@ public class PlayerMoveMixin {
                         Math.round(mcvcauth_freezeZ));
             }
 
-            // Reset both server-side position and client view
-            player.updatePositionAndAngles(
-                    mcvcauth_freezeX, mcvcauth_freezeY, mcvcauth_freezeZ,
-                    mcvcauth_freezeYaw, mcvcauth_freezePitch);
-            player.networkHandler.syncWithPlayerPosition();
+            // Rate-limited teleport back to freeze point
+            long now = System.nanoTime();
+            if (now - mcvcauth_lastTeleport >= TELEPORT_INTERVAL_NANO) {
+                player.networkHandler.requestTeleport(
+                        mcvcauth_freezeX, mcvcauth_freezeY, mcvcauth_freezeZ,
+                        mcvcauth_freezeYaw, mcvcauth_freezePitch);
+                mcvcauth_lastTeleport = now;
+            }
         } else if (mcvcauth_freezeInitialized) {
-            // Player authenticated — clear stored position
+            // Player authenticated — cleanup
             mcvcauth_freezeInitialized = false;
         }
     }

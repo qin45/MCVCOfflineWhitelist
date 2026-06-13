@@ -6,7 +6,9 @@
     "PlayerAuthMixin",
     "ChatAuthMixin",
     "PlayerMoveMixin",
-    "PlayerInteractionMixin"
+    "PlayerInteractionMixin",
+    "PlayerTickMixin",
+    "SlotInteractionMixin"
   ],
   "injectors": {
     "defaultRequire": 1
