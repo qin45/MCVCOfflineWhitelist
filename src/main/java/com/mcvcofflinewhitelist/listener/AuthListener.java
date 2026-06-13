@@ -2,6 +2,7 @@ package com.mcvcofflinewhitelist.listener;
 
 import com.mcvcofflinewhitelist.MCVCOfflineWhitelist;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
@@ -71,6 +72,18 @@ public class AuthListener {
                         .color(NamedTextColor.RED));
             }
         }
+    }
+
+    // ------------------------------------------------------------------
+    // Clear auth state on disconnect so reconnect forces re-authentication
+    // ------------------------------------------------------------------
+
+    @Subscribe(async = false)
+    public void onDisconnect(DisconnectEvent event) {
+        Player player = event.getPlayer();
+        plugin.getAuthManager().removePlayer(player.getUniqueId());
+        plugin.getLogger().info("Player '{}' disconnected, auth state cleared",
+                player.getUsername());
     }
 
     // ------------------------------------------------------------------

@@ -68,4 +68,13 @@ public class AuthManager {
     public boolean isAuthenticated(UUID playerUuid) {
         return authenticated.contains(playerUuid);
     }
+
+    /**
+     * Removes a player from both pending and authenticated sets.
+     * Called on disconnect so that reconnecting forces re-authentication.
+     */
+    public void removePlayer(UUID playerUuid) {
+        pendingAuth.remove(playerUuid);
+        authenticated.remove(playerUuid);
+    }
 }

@@ -5,7 +5,8 @@
   "mixins": [
     "PlayerAuthMixin",
     "ChatAuthMixin",
-    "PlayerMoveMixin"
+    "PlayerMoveMixin",
+    "PlayerInteractionMixin"
   ],
   "injectors": {
     "defaultRequire": 1
