@@ -3,9 +3,12 @@ package com.mcvcofflinewhitelist.auth;
 import com.mcvcofflinewhitelist.auth.command.LoginCommand;
 import com.mcvcofflinewhitelist.auth.command.RegisterCommand;
 import com.mcvcofflinewhitelist.auth.network.AuthNetworkHandler;
+import com.mcvcofflinewhitelist.auth.network.AuthPayload;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +42,13 @@ public class MCVCAuthMod implements ModInitializer {
         this.authManager = new AuthManager();
         this.networkHandler = new AuthNetworkHandler(this);
 
-        // Register plugin-message receiver (channel registered on join)
+        // ── Register payload types (required by Fabric API 0.100+) ──
+        // C2S — proxy sends to mod (appears as if client sent it)
+        PayloadTypeRegistry.playC2S().register(AuthPayload.ID, AuthPayload.CODEC);
+        // S2C — mod sends to proxy (appears as if server sends to client)
+        PayloadTypeRegistry.playS2C().register(AuthPayload.ID, AuthPayload.CODEC);
+
+        // Register plugin-message receiver (C2S — messages from proxy)
         networkHandler.registerReceiver();
 
         // Register commands
