@@ -1,0 +1,14 @@
+{
+  "mappings": {
+    "com/mcvcofflinewhitelist/auth/mixin/PlayerAuthMixin": {
+      "execute": "Lnet/minecraft/class_2170;method_9249(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "com/mcvcofflinewhitelist/auth/mixin/PlayerAuthMixin": {
+        "execute": "Lnet/minecraft/class_2170;method_9249(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V"
+      }
+    }
+  }
+}

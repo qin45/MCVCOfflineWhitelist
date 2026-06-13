@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.fabricmc.net/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.fabricmc:fabric-loom:1.6.12'
+    }
+}
+
+apply plugin: 'fabric-loom'
+
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.fabricmc.net/' }
+    mavenCentral()
+}
+
+dependencies {
+    // Minecraft + Fabric
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // BCrypt for password hashing
+    implementation "at.favre.lib:bcrypt:0.10.2"
+    include "at.favre.lib:bcrypt:0.10.2"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withSourcesJar()
+}
+
+processResources {
+    inputs.properties 'version': project.version,
+            'minecraft_version': project.minecraft_version
+    filteringCharset = 'UTF-8'
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version,
+                'minecraft_version': project.minecraft_version
+    }
+}

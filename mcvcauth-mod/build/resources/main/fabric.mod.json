@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "mcvcauth",
+  "version": "1.0.0",
+  "name": "MCVCAuth",
+  "description": "Password authentication for offline whitelist players on Velocity proxy",
+  "authors": ["qin45"],
+  "license": "MIT",
+  "environment": "server",
+  "entrypoints": {
+    "main": ["com.mcvcofflinewhitelist.auth.MCVCAuthMod"]
+  },
+  "mixins": ["mcvcauth-mod.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric-api": "*",
+    "minecraft": ">=1.21"
+  }
+}
