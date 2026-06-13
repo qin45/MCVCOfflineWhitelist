@@ -20,10 +20,14 @@ import net.kyori.adventure.text.format.NamedTextColor;
  * <p>Protocol (channel {@code mcvcofflinewhitelist:auth}):</p>
  * <ul>
  *   <li>Server → Proxy: {@code check_player|<uuid>|<username>}</li>
- *   <li>Proxy → Server: {@code whitelist_status|<uuid>|<username>|true|false}</li>
+ *   <li>Proxy → Server: {@code whitelist_status|<uuid>|<username>|whitelisted|needs_auth}</li>
  *   <li>Server → Proxy: {@code auth_success|<uuid>|<username>}</li>
  *   <li>Proxy → Server: {@code auth_confirmed|<uuid>|<username>}</li>
  * </ul>
+ *
+ * <p>The {@code needs_auth} flag in {@code whitelist_status} is {@code false}
+ * when the player has already authenticated this session — this prevents
+ * requiring re-authentication when switching between backend servers.</p>
  */
 public class AuthListener {
 
@@ -104,7 +108,11 @@ public class AuthListener {
 
     /**
      * The Fabric mod asks: "is this player on the offline whitelist?"
-     * Respond with the boolean status and mark them pending if whitelisted.
+     * Respond with the boolean status and a whether auth is still needed.
+     *
+     * <p>If the player has already authenticated this session (e.g. when
+     * switching between backend servers), {@code needsAuth} is {@code false}
+     * and the player is not re-marked as pending.</p>
      */
     private void handleCheckPlayer(String[] parts) {
         if (parts.length < 3) {
@@ -116,12 +124,18 @@ public class AuthListener {
         boolean whitelisted = plugin.getWhitelistManager().isWhitelisted(username);
 
         if (whitelisted) {
-            plugin.getAuthManager().markPending(uuid);
-            plugin.getLogger().info("Player '{}' marked for password auth", username);
+            // If already authenticated this session → no need to re-auth
+            if (!plugin.getAuthManager().isAuthenticated(uuid)) {
+                plugin.getAuthManager().markPending(uuid);
+                plugin.getLogger().info("Player '{}' marked for password auth", username);
+            } else {
+                plugin.getLogger().info("Player '{}' already authenticated (server switch)", username);
+            }
         }
 
+        boolean needsAuth = whitelisted && !plugin.getAuthManager().isAuthenticated(uuid);
         respond(uuid, "whitelist_status", uuid.toString(), username,
-                String.valueOf(whitelisted));
+                String.valueOf(whitelisted), String.valueOf(needsAuth));
     }
 
     /**

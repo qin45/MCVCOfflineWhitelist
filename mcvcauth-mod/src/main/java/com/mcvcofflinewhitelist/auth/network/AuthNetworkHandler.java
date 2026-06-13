@@ -26,7 +26,7 @@ public class AuthNetworkHandler {
     public void registerReceiver() {
         ServerPlayNetworking.registerGlobalReceiver(AuthPayload.ID, (payload, context) -> {
             String msg = payload.text();
-            String[] parts = msg.split("\\|", 4);
+            String[] parts = msg.split("\\|", 6);
             if (parts.length < 1) return;
 
             context.server().execute(() -> {
@@ -53,24 +53,31 @@ public class AuthNetworkHandler {
     private void handleWhitelistStatus(String[] parts, ServerPlayerEntity player) {
         if (parts.length < 4) return;
         boolean whitelisted = Boolean.parseBoolean(parts[3]);
+        // 5th field (optional): whether auth is still needed (default true)
+        boolean needsAuth = parts.length < 5 || Boolean.parseBoolean(parts[4]);
 
         if (whitelisted) {
             AuthManager auth = mod.getAuthManager();
             UUID uuid = player.getUuid();
             String username = player.getName().getString();
 
-            auth.markNeedsAuth(uuid);
+            if (needsAuth) {
+                auth.markNeedsAuth(uuid);
 
-            if (auth.isRegistered(username)) {
-                player.sendMessage(
-                        net.minecraft.text.Text.literal(
-                                "§6[MCVCAuth] §e请输入密码登录: /login <密码>"));
+                if (auth.isRegistered(username)) {
+                    player.sendMessage(
+                            net.minecraft.text.Text.literal(
+                                    "§6[MCVCAuth] §e请输入密码登录: /login <密码>"));
+                } else {
+                    player.sendMessage(
+                            net.minecraft.text.Text.literal(
+                                    "§6[MCVCAuth] §e请注册密码: /register <密码> <确认密码>"));
+                }
+                MCVCAuthMod.LOGGER.info("Player '{}' needs auth (whitelisted)", username);
             } else {
-                player.sendMessage(
-                        net.minecraft.text.Text.literal(
-                                "§6[MCVCAuth] §e请注册密码: /register <密码> <确认密码>"));
+                // Already authenticated this session (server switch) — skip auth
+                MCVCAuthMod.LOGGER.info("Player '{}' already authenticated, skipping auth", username);
             }
-            MCVCAuthMod.LOGGER.info("Player '{}' needs auth (whitelisted)", username);
         }
     }
 

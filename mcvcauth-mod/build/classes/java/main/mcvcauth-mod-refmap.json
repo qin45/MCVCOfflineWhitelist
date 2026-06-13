@@ -1,13 +1,25 @@
 {
   "mappings": {
+    "com/mcvcofflinewhitelist/auth/mixin/ChatAuthMixin": {
+      "onChatMessage": "Lnet/minecraft/class_3244;method_12048(Lnet/minecraft/class_2797;)V"
+    },
     "com/mcvcofflinewhitelist/auth/mixin/PlayerAuthMixin": {
       "execute": "Lnet/minecraft/class_2170;method_9249(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V"
+    },
+    "com/mcvcofflinewhitelist/auth/mixin/PlayerMoveMixin": {
+      "onPlayerMove": "Lnet/minecraft/class_3244;method_12063(Lnet/minecraft/class_2828;)V"
     }
   },
   "data": {
     "named:intermediary": {
+      "com/mcvcofflinewhitelist/auth/mixin/ChatAuthMixin": {
+        "onChatMessage": "Lnet/minecraft/class_3244;method_12048(Lnet/minecraft/class_2797;)V"
+      },
       "com/mcvcofflinewhitelist/auth/mixin/PlayerAuthMixin": {
         "execute": "Lnet/minecraft/class_2170;method_9249(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V"
+      },
+      "com/mcvcofflinewhitelist/auth/mixin/PlayerMoveMixin": {
+        "onPlayerMove": "Lnet/minecraft/class_3244;method_12063(Lnet/minecraft/class_2828;)V"
       }
     }
   }

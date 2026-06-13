@@ -3,7 +3,9 @@
   "package": "com.mcvcofflinewhitelist.auth.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "PlayerAuthMixin"
+    "PlayerAuthMixin",
+    "ChatAuthMixin",
+    "PlayerMoveMixin"
   ],
   "injectors": {
     "defaultRequire": 1

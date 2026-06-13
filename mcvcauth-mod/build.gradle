@@ -27,9 +27,10 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    // BCrypt for password hashing
+    // BCrypt for password hashing (include both bcrypt and its transitive dep bytes)
     implementation "at.favre.lib:bcrypt:0.10.2"
     include "at.favre.lib:bcrypt:0.10.2"
+    include "at.favre.lib:bytes:1.5.0"
 }
 
 java {
