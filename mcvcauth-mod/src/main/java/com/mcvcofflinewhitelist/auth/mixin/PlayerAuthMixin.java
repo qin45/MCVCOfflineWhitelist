@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * Intercepts command execution to block unauthorized players
@@ -20,15 +20,15 @@ public class PlayerAuthMixin {
 
     @Inject(method = "execute", at = @At("HEAD"), cancellable = true)
     public void onExecute(ParseResults<ServerCommandSource> parseResults, String command,
-                          CallbackInfoReturnable<Integer> cir) {
+                          CallbackInfo ci) {
         ServerCommandSource source = parseResults.getContext().getSource();
         if (!(source.getEntity() instanceof ServerPlayerEntity player)) {
-            return; // Not a player, let it through
+            return;
         }
 
         var auth = MCVCAuthMod.getInstance().getAuthManager();
         if (!auth.needsAuth(player.getUuid())) {
-            return; // Doesn't need auth, let it through
+            return;
         }
 
         // Allow /login, /l, /register, /reg
@@ -41,6 +41,6 @@ public class PlayerAuthMixin {
 
         // Block everything else
         source.sendError(Text.literal("§cYou must authenticate first! Use /login or /register"));
-        cir.setReturnValue(0);
+        ci.cancel();
     }
 }
