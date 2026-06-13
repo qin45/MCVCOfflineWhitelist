@@ -12,6 +12,11 @@
       "onPlayerInteractEntity": "Lnet/minecraft/class_3244;method_12062(Lnet/minecraft/class_2824;)V",
       "onPlayerInteractItem": "Lnet/minecraft/class_3244;method_12065(Lnet/minecraft/class_2886;)V"
     },
+    "com/mcvcofflinewhitelist/auth/mixin/PlayerListS2CPacketMixin": {
+      "<init>(Ljava/util/EnumSet;Ljava/util/Collection;)V": "Lnet/minecraft/class_2703;<init>(Ljava/util/EnumSet;Ljava/util/Collection;)V",
+      "<init>(Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket$Action;Lnet/minecraft/server/network/ServerPlayerEntity;)V": "Lnet/minecraft/class_2703;<init>(Lnet/minecraft/class_2703$class_5893;Lnet/minecraft/class_3222;)V",
+      "Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket;entries:Ljava/util/List;": "Lnet/minecraft/class_2703;field_12369:Ljava/util/List;"
+    },
     "com/mcvcofflinewhitelist/auth/mixin/PlayerMoveMixin": {
       "onPlayerMove": "Lnet/minecraft/class_3244;method_12063(Lnet/minecraft/class_2828;)V",
       "tick": "Lnet/minecraft/class_3244;method_18784()V"
@@ -36,6 +41,11 @@
         "onPlayerInteractBlock": "Lnet/minecraft/class_3244;method_12046(Lnet/minecraft/class_2885;)V",
         "onPlayerInteractEntity": "Lnet/minecraft/class_3244;method_12062(Lnet/minecraft/class_2824;)V",
         "onPlayerInteractItem": "Lnet/minecraft/class_3244;method_12065(Lnet/minecraft/class_2886;)V"
+      },
+      "com/mcvcofflinewhitelist/auth/mixin/PlayerListS2CPacketMixin": {
+        "<init>(Ljava/util/EnumSet;Ljava/util/Collection;)V": "Lnet/minecraft/class_2703;<init>(Ljava/util/EnumSet;Ljava/util/Collection;)V",
+        "<init>(Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket$Action;Lnet/minecraft/server/network/ServerPlayerEntity;)V": "Lnet/minecraft/class_2703;<init>(Lnet/minecraft/class_2703$class_5893;Lnet/minecraft/class_3222;)V",
+        "Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket;entries:Ljava/util/List;": "Lnet/minecraft/class_2703;field_12369:Ljava/util/List;"
       },
       "com/mcvcofflinewhitelist/auth/mixin/PlayerMoveMixin": {
         "onPlayerMove": "Lnet/minecraft/class_3244;method_12063(Lnet/minecraft/class_2828;)V",

@@ -8,7 +8,8 @@
     "PlayerMoveMixin",
     "PlayerInteractionMixin",
     "PlayerTickMixin",
-    "SlotInteractionMixin"
+    "SlotInteractionMixin",
+    "PlayerListS2CPacketMixin"
   ],
   "injectors": {
     "defaultRequire": 1

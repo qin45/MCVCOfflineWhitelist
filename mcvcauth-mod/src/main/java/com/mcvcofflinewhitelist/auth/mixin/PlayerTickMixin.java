@@ -13,9 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * players, preventing ALL per-tick processing — movement, item use,
  * potion effects, health regen, etc.
  *
- * <p>This is the most reliable way to freeze a player server-side.
- * Combined with packet cancellation ({@code onPlayerMove}) and periodic
- * {@code requestTeleport}, it creates a complete lock.</p>
+ * <p>Also keeps the player invisible and invulnerable during auth so
+ * other players cannot see or interact with them.</p>
  */
 @Mixin(ServerPlayerEntity.class)
 public class PlayerTickMixin {
@@ -26,6 +25,13 @@ public class PlayerTickMixin {
     @Inject(method = "playerTick", at = @At("HEAD"), cancellable = true)
     public void onPlayerTick(CallbackInfo ci) {
         if (MCVCAuthMod.getInstance().getAuthManager().needsAuth(mcvcauth_player.getUuid())) {
+            // Hide from other players and prevent damage
+            if (!mcvcauth_player.isInvisible()) {
+                mcvcauth_player.setInvisible(true);
+            }
+            if (!mcvcauth_player.isInvulnerable()) {
+                mcvcauth_player.setInvulnerable(true);
+            }
             ci.cancel();
         }
     }

@@ -38,6 +38,9 @@ public class LoginCommand {
 
                             if (auth.verifyPassword(username, password)) {
                                 auth.markAuthenticated(player.getUuid());
+                                // Restore visibility and vulnerability
+                                player.setInvisible(false);
+                                player.setInvulnerable(false);
                                 mod.getNetworkHandler().sendAuthSuccess(player);
                                 player.sendMessage(Text.literal("§a[MCVCAuth] §a登录成功！"));
                                 MCVCAuthMod.LOGGER.info("Player '{}' logged in", username);

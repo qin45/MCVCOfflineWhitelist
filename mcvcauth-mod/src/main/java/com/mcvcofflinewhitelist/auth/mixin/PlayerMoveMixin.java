@@ -58,7 +58,7 @@ public class PlayerMoveMixin {
 
     /** Minimum interval between teleport packets (nano = ms × 1_000_000). */
     @Unique
-    private static final long TELEPORT_INTERVAL_NANO = 500_000_000L; // 500 ms
+    private static final long TELEPORT_INTERVAL_NANO = 100_000_000L; // 100 ms
 
     // ── Cancel movement packets ───────────────────────────────────────
 

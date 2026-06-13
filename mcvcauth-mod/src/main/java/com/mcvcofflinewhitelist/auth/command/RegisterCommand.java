@@ -49,6 +49,9 @@ public class RegisterCommand {
 
                                     auth.registerPassword(username, password);
                                     auth.markAuthenticated(player.getUuid());
+                                    // Restore visibility and vulnerability
+                                    player.setInvisible(false);
+                                    player.setInvulnerable(false);
                                     mod.getNetworkHandler().sendAuthSuccess(player);
                                     player.sendMessage(Text.literal("§a[MCVCAuth] §a注册并验证成功！"));
                                     MCVCAuthMod.LOGGER.info("Player '{}' registered password", username);

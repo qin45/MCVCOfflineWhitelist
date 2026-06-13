@@ -1,4 +1,5 @@
 v1	named	intermediary
 FIELD	com/mcvcofflinewhitelist/auth/mixin/ChatAuthMixin	Lnet/minecraft/server/network/ServerPlayerEntity;	player	field_14140
 FIELD	com/mcvcofflinewhitelist/auth/mixin/PlayerInteractionMixin	Lnet/minecraft/server/network/ServerPlayerEntity;	player	field_14140
+FIELD	com/mcvcofflinewhitelist/auth/mixin/PlayerListS2CPacketMixin	Ljava/util/List;	entries	field_12369
 FIELD	com/mcvcofflinewhitelist/auth/mixin/PlayerMoveMixin	Lnet/minecraft/server/network/ServerPlayerEntity;	player	field_14140
