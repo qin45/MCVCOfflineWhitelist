@@ -43,7 +43,7 @@ public class PlayerListS2CPacketMixin {
             method = "<init>(Ljava/util/EnumSet;Ljava/util/Collection;)V",
             at = @At("HEAD"),
             argsOnly = true)
-    private Collection<ServerPlayerEntity> filterPlayerList(
+    private static Collection<ServerPlayerEntity> filterPlayerList(
             Collection<ServerPlayerEntity> players) {
         ArrayList<ServerPlayerEntity> filtered = new ArrayList<>();
         for (ServerPlayerEntity player : players) {
