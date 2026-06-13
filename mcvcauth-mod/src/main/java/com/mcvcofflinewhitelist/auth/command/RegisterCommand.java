@@ -28,34 +28,34 @@ public class RegisterCommand {
                                     String username = player.getName().getString();
 
                                     if (!auth.needsAuth(player.getUuid())) {
-                                        player.sendMessage(Text.literal("§aYou are already authenticated."));
+                                        player.sendMessage(Text.literal("§a已验证，无需重复注册"));
                                         return 1;
                                     }
 
                                     if (auth.isRegistered(username)) {
-                                        player.sendMessage(Text.literal("§cYou are already registered! Use /login <password>"));
+                                        player.sendMessage(Text.literal("§c已注册！请使用 /login <密码>"));
                                         return 1;
                                     }
 
                                     if (!password.equals(confirm)) {
-                                        player.sendMessage(Text.literal("§cPasswords do not match!"));
+                                        player.sendMessage(Text.literal("§c两次输入的密码不一致！"));
                                         return 1;
                                     }
 
                                     if (password.length() < 4) {
-                                        player.sendMessage(Text.literal("§cPassword must be at least 4 characters!"));
+                                        player.sendMessage(Text.literal("§c密码长度至少为4个字符！"));
                                         return 1;
                                     }
 
                                     auth.registerPassword(username, password);
                                     auth.markAuthenticated(player.getUuid());
                                     mod.getNetworkHandler().sendAuthSuccess(player);
-                                    player.sendMessage(Text.literal("§a[MCVCAuth] §aRegistered and authenticated!"));
+                                    player.sendMessage(Text.literal("§a[MCVCAuth] §a注册并验证成功！"));
                                     MCVCAuthMod.LOGGER.info("Player '{}' registered password", username);
                                     return 1;
                                 })))
                 .executes(ctx -> {
-                    ctx.getSource().sendError(Text.literal("Usage: /register <password> <confirm>"));
+                    ctx.getSource().sendError(Text.literal("用法: /register <密码> <确认密码>"));
                     return 0;
                 })
         );

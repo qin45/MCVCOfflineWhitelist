@@ -63,7 +63,7 @@ public class AuthListener {
             if (player.getCurrentServer().isPresent()) {
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
                 player.sendMessage(Component.text(
-                        "You must authenticate before switching servers! Use /login")
+                        "请先完成验证再切换服务器！使用 /login 登录")
                         .color(NamedTextColor.RED));
             }
         }

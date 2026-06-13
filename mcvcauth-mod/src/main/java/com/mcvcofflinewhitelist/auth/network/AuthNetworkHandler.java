@@ -64,11 +64,11 @@ public class AuthNetworkHandler {
             if (auth.isRegistered(username)) {
                 player.sendMessage(
                         net.minecraft.text.Text.literal(
-                                "§6[MCVCAuth] §ePlease login: /login <password>"));
+                                "§6[MCVCAuth] §e请输入密码登录: /login <密码>"));
             } else {
                 player.sendMessage(
                         net.minecraft.text.Text.literal(
-                                "§6[MCVCAuth] §ePlease register: /register <password> <confirm>"));
+                                "§6[MCVCAuth] §e请注册密码: /register <密码> <确认密码>"));
             }
             MCVCAuthMod.LOGGER.info("Player '{}' needs auth (whitelisted)", username);
         }
@@ -76,7 +76,7 @@ public class AuthNetworkHandler {
 
     private void handleAuthConfirmed(String[] parts, ServerPlayerEntity player) {
         player.sendMessage(
-                net.minecraft.text.Text.literal("§a[MCVCAuth] §aAuthentication complete!"));
+                net.minecraft.text.Text.literal("§a[MCVCAuth] §a验证完成！"));
         MCVCAuthMod.LOGGER.info("Proxy confirmed auth for '{}'",
                 player.getName().getString());
     }

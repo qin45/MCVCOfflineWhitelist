@@ -32,15 +32,16 @@ public class PlayerAuthMixin {
         }
 
         // Allow /login, /l, /register, /reg
+        // Note: the 'command' parameter does NOT include the leading '/'
         String trimmed = command.trim().toLowerCase();
-        if (trimmed.startsWith("/login") || trimmed.startsWith("/l ") || trimmed.equals("/l")
-                || trimmed.startsWith("/register") || trimmed.startsWith("/reg ")
-                || trimmed.equals("/reg")) {
+        if (trimmed.startsWith("login") || trimmed.startsWith("l ") || trimmed.equals("l")
+                || trimmed.startsWith("register") || trimmed.startsWith("reg ")
+                || trimmed.equals("reg")) {
             return;
         }
 
         // Block everything else
-        source.sendError(Text.literal("§cYou must authenticate first! Use /login or /register"));
+        source.sendError(Text.literal("§c请先完成验证！使用 /login <密码> 或 /register <密码> <确认密码>"));
         ci.cancel();
     }
 }

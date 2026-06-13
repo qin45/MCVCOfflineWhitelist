@@ -27,27 +27,27 @@ public class LoginCommand {
                             String username = player.getName().getString();
 
                             if (!auth.needsAuth(player.getUuid())) {
-                                player.sendMessage(Text.literal("§aYou are already authenticated."));
+                                player.sendMessage(Text.literal("§a已验证，无需重复登录"));
                                 return 1;
                             }
 
                             if (!auth.isRegistered(username)) {
-                                player.sendMessage(Text.literal("§cNo password registered! Use /register <password> <confirm>"));
+                                player.sendMessage(Text.literal("§c尚未注册！请使用 /register <密码> <确认密码>"));
                                 return 1;
                             }
 
                             if (auth.verifyPassword(username, password)) {
                                 auth.markAuthenticated(player.getUuid());
                                 mod.getNetworkHandler().sendAuthSuccess(player);
-                                player.sendMessage(Text.literal("§a[MCVCAuth] §aAuthentication successful!"));
+                                player.sendMessage(Text.literal("§a[MCVCAuth] §a登录成功！"));
                                 MCVCAuthMod.LOGGER.info("Player '{}' logged in", username);
                             } else {
-                                player.sendMessage(Text.literal("§c[MCVCAuth] §cWrong password! Try again."));
+                                player.sendMessage(Text.literal("§c[MCVCAuth] §c密码错误，请重试"));
                             }
                             return 1;
                         }))
                 .executes(ctx -> {
-                    ctx.getSource().sendError(Text.literal("Usage: /login <password>"));
+                    ctx.getSource().sendError(Text.literal("用法: /login <密码>"));
                     return 0;
                 })
         );
